@@ -1,9 +1,8 @@
 #데이터 수신 파이프 라인
-import os
-
-from dotenv import load_dotenv
 from fastapi import UploadFile
+from sqlmodel.ext.asyncio.session import AsyncSession
 
+from Config.Server_Options import load_server_options
 from .Data_Save_service import DataSaveService
 from .Notifier_service import NotifierService
 from .Security_service import SecurityService
@@ -12,9 +11,8 @@ from .Transform_service import TransformService
 from .Validator_service import ValidatorService
 from .Video_Make_service import VideoMakeService
 
-load_dotenv()
-TRANSFORM_ON = os.getenv("TRANSFORM_ON", "0") == "1"
-SKELETON_ON = os.getenv("SKELETON_ON", "0") == "1"
+SERVER_OPTIONS = load_server_options()
+FEATURE_SETTINGS = SERVER_OPTIONS["features"]
 
 
 class DataPipeline:
@@ -29,18 +27,19 @@ class DataPipeline:
 
     async def run(
         self,
+        session: AsyncSession,
         file: UploadFile,
         payload: str,
     ) -> None:
         file, payload = await self.security_service.run(file=file, payload=payload)
         await self.validator_service.run(file=file, payload=payload)
 
-        if TRANSFORM_ON:
+        if FEATURE_SETTINGS.get("transform_on", False):
             file, payload = await self.transform_service.run(file=file, payload=payload)
 
-        if SKELETON_ON:
+        if FEATURE_SETTINGS.get("skeleton_on", False):
             file, payload = await self.skeleton_service.run(file=file, payload=payload)
 
-        await self.data_save_service.run(file=file, payload=payload)
+        await self.data_save_service.run(session=session, file=file, payload=payload)
         await self.notifier_service.run(file=file, payload=payload)
         await self.video_make_service.run(file=file, payload=payload)

@@ -9,7 +9,7 @@ class AccidentDetail(SQLModel, table=True):
     __tablename__ = "accident_detail"
 
     Detail_id: Optional[int] = Field(default=None, primary_key=True)
-    File_name: str = Field(sa_column=Column(String(30), nullable=False))
+    File_name: str = Field(sa_column=Column(String(30), nullable=True))
     TXT_File_path: Optional[str] = Field(default=None, sa_column=Column(String(30), nullable=True))
     Video_File_path: Optional[str] = Field(default=None, sa_column=Column(String(30), nullable=True))
     bbox_x1: Optional[float] = Field(default=None, sa_column=Column(Float, nullable=True))
@@ -56,7 +56,7 @@ class Device(SQLModel, table=True):
 class Accident(SQLModel, table=True):
     __tablename__ = "accident"
 
-    Accident_id: int = Field(primary_key=True)
+    Accident_id: Optional[int] = Field(default=None, primary_key=True)
     User_id: int = Field(foreign_key="user.User_id", nullable=False)
     Device_id: int = Field(foreign_key="device.Device_id", nullable=False)
     Type: Optional[str] = Field(default=None, sa_column=Column(String(30), nullable=True))

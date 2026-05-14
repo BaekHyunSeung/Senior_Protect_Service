@@ -7,3 +7,4 @@ aiomysql
 pydantic
 python-multipart
 cryptography
+pillow
