@@ -1,11 +1,12 @@
 {
     "header": {
       "Device_ID": 1,
-      "TimeStamp": "20260514_204500"
+      "TimeStamp": "20260514_204509"
     },
     "analysis": {
-      "Type": "낙상",
-      "bbox": [18, 145, 560, 392],
+      "_comment": "낙상 사고로 종류 한정 위험도에 따라 구분( H: High, M: Medium, L: Low, N: Normal)",
+      "Type": "M", 
+      "bbox": [18, 145, 560, 392], 
       "Masking_box": [18, 145, 560, 392],
       "Skeleton_point": [
         { "index": 0, "x": 500, "y": 196 },

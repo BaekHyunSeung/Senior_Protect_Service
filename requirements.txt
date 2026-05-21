@@ -8,3 +8,4 @@ pydantic
 python-multipart
 cryptography
 pillow
+opencv-python

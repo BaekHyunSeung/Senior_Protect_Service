@@ -18,6 +18,15 @@ DEFAULT_SERVER_SETTINGS: dict[str, Any] = {
         "point_color": [255, 0, 0],
         "point_radius": 4,
     },
+    "video": {
+        "output_dir": "videos",
+        "fps": 30,
+        "session_end_timeout_sec": 2.0,
+        "monitor_interval_sec": 0.5,
+    },
+    "accident_filter": {
+        "session_timeout_sec": 15.0,
+    },
 }
 
 SERVER_SETTINGS_PATH = Path(__file__).with_name("Server_Options.json")
