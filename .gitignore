@@ -3,7 +3,6 @@ __pycache__/
 .env
 *.pyc
 output/
-README.md
-작업정리_20260521.md
-pipeline_test_sender.py
 pipeline_test_frame.png
+pipeline_test_sender.py
+videos/

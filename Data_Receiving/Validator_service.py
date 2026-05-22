@@ -34,9 +34,9 @@ class ValidatorService:
 
     def _validate_timestamp(self, timestamp: str) -> None:
         try:
-            datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+            datetime.fromisoformat(timestamp)
         except ValueError as exc:
-            raise ValueError("TimeStamp 형식은 YYYYMMDD_HHMMSS 여야 합니다.") from exc
+            raise ValueError("TimeStamp 형식은 YYYY-MM-DDTHH:MM:SS 여야 합니다.") from exc
 
     def _validate_skeleton_points(self, skeleton_points: list[object]) -> None:
         seen_indexes: set[int] = set()

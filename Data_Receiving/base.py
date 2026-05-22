@@ -11,9 +11,6 @@ from .Transform_service import TransformService
 from .Validator_service import ValidatorService
 from .Video_Make_service import VideoMakeService
 
-SERVER_OPTIONS = load_server_options()
-FEATURE_SETTINGS = SERVER_OPTIONS["features"]
-
 
 class DataPipeline:
     def __init__(self) -> None:
@@ -31,13 +28,15 @@ class DataPipeline:
         file: UploadFile,
         payload: str,
     ) -> None:
+        feature_settings = load_server_options()["features"]
+
         file, payload = await self.security_service.run(file=file, payload=payload)
         await self.validator_service.run(file=file, payload=payload)
 
-        if FEATURE_SETTINGS.get("transform_on", False):
+        if feature_settings.get("transform_on", False):
             file, payload = await self.transform_service.run(file=file, payload=payload)
 
-        if FEATURE_SETTINGS.get("skeleton_on", False):
+        if feature_settings.get("skeleton_on", False):
             file, payload = await self.skeleton_service.run(file=file, payload=payload)
 
         await self.data_save_service.run(session=session, file=file, payload=payload)

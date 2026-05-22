@@ -1,7 +1,7 @@
-from datetime import time
+from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Boolean, Column, Float, String, Time
+from sqlalchemy import Boolean, Column, DateTime, Float, String
 from sqlmodel import Field, SQLModel
 
 
@@ -60,7 +60,7 @@ class Accident(SQLModel, table=True):
     User_id: int = Field(foreign_key="user.User_id", nullable=False)
     Device_id: int = Field(foreign_key="device.Device_id", nullable=False)
     Type: Optional[str] = Field(default=None, sa_column=Column(String(30), nullable=True))
-    Time: Optional[time] = Field(default=None, sa_column=Column(Time, nullable=True))
+    Time: Optional[datetime] = Field(default=None, sa_column=Column(DateTime, nullable=True))
     Detail_id: int = Field(foreign_key="accident_detail.Detail_id", nullable=False)
 
 

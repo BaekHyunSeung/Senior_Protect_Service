@@ -51,10 +51,9 @@ class DataSaveService:
                 session=session,
                 device_id=request_payload.header.Device_ID,
             )
-            accident_time = datetime.strptime(
-                request_payload.header.TimeStamp,
-                "%Y%m%d_%H%M%S",
-            ).time()
+            accident_timestamp = datetime.fromisoformat(
+                request_payload.header.TimeStamp
+            )
 
             bbox = request_payload.analysis.bbox
             accident_detail = AccidentDetail(
@@ -70,7 +69,7 @@ class DataSaveService:
                 User_id=device.Target,
                 Device_id=device.Device_id,
                 Type=request_payload.analysis.Type,
-                Time=accident_time,
+                Time=accident_timestamp,
                 Detail_id=accident_detail.Detail_id,
             )
             session.add(accident)

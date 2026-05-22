@@ -1,7 +1,7 @@
 {
     "header": {
       "Device_ID": 1,
-      "TimeStamp": "20260514_204509"
+      "TimeStamp": "2026-05-14T20:45:09.000Z"
     },
     "analysis": {
       "_comment": "낙상 사고로 종류 한정 위험도에 따라 구분( H: High, M: Medium, L: Low, N: Normal)",

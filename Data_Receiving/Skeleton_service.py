@@ -7,13 +7,6 @@ from PIL import Image, ImageDraw, UnidentifiedImageError
 from Config.Server_Options import load_server_options
 from Model.Request import ReceivePayload, SkeletonPointPayload
 
-SERVER_OPTIONS = load_server_options()
-SKELETON_SETTINGS = SERVER_OPTIONS["skeleton"]
-SKELETON_CONNECTIONS = SKELETON_SETTINGS["connections"]
-SKELETON_LINE_COLOR = tuple(SKELETON_SETTINGS["line_color"])
-SKELETON_POINT_COLOR = tuple(SKELETON_SETTINGS["point_color"])
-SKELETON_POINT_RADIUS = SKELETON_SETTINGS["point_radius"]
-
 
 class SkeletonService:
     async def run(
@@ -21,6 +14,12 @@ class SkeletonService:
         file: UploadFile,
         payload: str,
     ) -> tuple[UploadFile, str]:
+        skeleton_settings = load_server_options()["skeleton"]
+        skeleton_connections = skeleton_settings["connections"]
+        skeleton_line_color = tuple(skeleton_settings["line_color"])
+        skeleton_point_color = tuple(skeleton_settings["point_color"])
+        skeleton_point_radius = skeleton_settings["point_radius"]
+
         request_payload = ReceivePayload.model_validate_json(payload)
         skeleton_points = self._normalize_points(request_payload.analysis.Skeleton_point)
         image_bytes = await file.read()
@@ -31,13 +30,13 @@ class SkeletonService:
             raise ValueError("스켈레톤을 그릴 수 없는 이미지 형식입니다.") from exc
 
         draw = ImageDraw.Draw(image)
-        for start_index, end_index in self._parse_connections():
+        for start_index, end_index in self._parse_connections(skeleton_connections):
             start_point = skeleton_points[start_index]
             end_point = skeleton_points[end_index]
             if start_point is None or end_point is None:
                 continue
 
-            draw.line([start_point, end_point], fill=SKELETON_LINE_COLOR, width=3)
+            draw.line([start_point, end_point], fill=skeleton_line_color, width=3)
 
         for point in skeleton_points:
             if point is None:
@@ -46,10 +45,10 @@ class SkeletonService:
             x, y = point
             draw.ellipse(
                 [
-                    (x - SKELETON_POINT_RADIUS, y - SKELETON_POINT_RADIUS),
-                    (x + SKELETON_POINT_RADIUS, y + SKELETON_POINT_RADIUS),
+                    (x - skeleton_point_radius, y - skeleton_point_radius),
+                    (x + skeleton_point_radius, y + skeleton_point_radius),
                 ],
-                fill=SKELETON_POINT_COLOR,
+                fill=skeleton_point_color,
             )
 
         output = BytesIO()
@@ -76,10 +75,10 @@ class SkeletonService:
 
         return normalized_points
 
-    def _parse_connections(self) -> list[tuple[int, int]]:
+    def _parse_connections(self, raw_connections: str) -> list[tuple[int, int]]:
         connections: list[tuple[int, int]] = []
 
-        for raw_connection in SKELETON_CONNECTIONS.split(","):
+        for raw_connection in raw_connections.split(","):
             connection = raw_connection.strip()
             if not connection:
                 continue
