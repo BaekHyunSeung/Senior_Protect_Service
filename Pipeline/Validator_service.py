@@ -10,10 +10,11 @@ from Model.Request import ReceivePayload
 class ValidatorService:
     async def run(
         self,
-        file: UploadFile,
+        file: UploadFile | None,
         payload: str,
     ) -> None:
-        self._validate_file(file)
+        if file is not None:
+            self._validate_file(file)
         self._validate_payload(payload)
 
     def _validate_file(self, file: UploadFile) -> None:

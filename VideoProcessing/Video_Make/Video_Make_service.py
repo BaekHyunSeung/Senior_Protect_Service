@@ -1,4 +1,3 @@
-# 영상 생성
 import asyncio
 from pathlib import Path
 from time import monotonic
@@ -9,7 +8,7 @@ from fastapi import UploadFile
 from Config.Server_Options import load_server_options
 from Model.Request import ReceivePayload
 from Model.Video import VideoSessionState
-from Utils.Video_util import (
+from .Video_util import (
     build_video_output_paths,
     create_video_writer,
     delete_file_if_exists,
@@ -42,9 +41,12 @@ class VideoMakeService:
 
     async def run(
         self,
-        file: UploadFile,
+        file: UploadFile | None,
         payload: str,
     ) -> None:
+        if file is None:
+            return
+
         request_payload = ReceivePayload.model_validate_json(payload)
         frame = await self._read_frame(file=file)
         device_id = request_payload.header.Device_ID

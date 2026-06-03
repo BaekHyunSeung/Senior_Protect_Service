@@ -5,7 +5,7 @@ from fastapi import UploadFile
 class NotifierService:
     async def run(
         self,
-        file: UploadFile,
+        file: UploadFile | None,
         payload: str,
     ) -> None:
         del file

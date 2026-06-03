@@ -10,7 +10,7 @@ from sqlmodel import SQLModel
 
 import DB.Entity
 from DB.DB import engine
-from Routers.Data_Receiving_Router import router as data_receiving_router
+from Ingest.protobuf_receiver import protobuf_ingest_receiver
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,18 +30,19 @@ async def lifespan(app: FastAPI):
     logger.info("StartUp: Connect Database...")
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
+    await protobuf_ingest_receiver.start()
     logger.info("StartUp Complete!")
 
     yield
 
+    logger.info("Shutdown: Stop protobuf ingest receiver...")
+    await protobuf_ingest_receiver.stop()
     logger.info("Shutdown: Close Database Engine...")
     await engine.dispose()
     logger.info("Shutdown Complete")
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(data_receiving_router)
-
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,4 +1,3 @@
-# 스켈레톤 기능
 from io import BytesIO
 
 from fastapi import UploadFile

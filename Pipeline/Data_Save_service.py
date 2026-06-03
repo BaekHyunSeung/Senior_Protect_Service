@@ -33,7 +33,7 @@ class DataSaveService:
     async def run(
         self,
         session: AsyncSession,
-        file: UploadFile,
+        file: UploadFile | None,
         payload: str,
     ) -> None:
         del file

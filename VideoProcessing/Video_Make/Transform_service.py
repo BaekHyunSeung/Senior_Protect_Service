@@ -1,8 +1,7 @@
-# 복호화 단계
 from fastapi import UploadFile
 
 
-class SecurityService:
+class TransformService:
     async def run(
         self,
         file: UploadFile,

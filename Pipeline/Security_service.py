@@ -1,11 +1,11 @@
-# 마스킹 복원
+# 복호화 단계
 from fastapi import UploadFile
 
 
-class TransformService:
+class SecurityService:
     async def run(
         self,
-        file: UploadFile,
+        file: UploadFile | None,
         payload: str,
-    ) -> tuple[UploadFile, str]:
+    ) -> tuple[UploadFile | None, str]:
         return file, payload
